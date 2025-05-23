@@ -8,7 +8,9 @@ import { RoleModule } from './main/modules/role.module';
 import { LoggerModule } from './main/modules/logger.module';
 import { UserSessionModule } from './main/modules/user-session.module';
 import { UserModule } from './main/modules/user.module';
-
+import { ProductModule } from './main/modules/product.module';
+import { CartModule } from './main/modules/cart.module';
+import { WishlistModule } from './main/modules/wishlist.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { UserModule } from './main/modules/user.module';
     UserSessionModule,
     GoogleModule,
     UserModule,
-
+    ProductModule,
+    CartModule,
+    WishlistModule
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
