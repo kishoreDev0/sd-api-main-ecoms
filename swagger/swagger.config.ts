@@ -24,7 +24,7 @@ function sortSwaggerTags(document: OpenAPIObject): void {
     'User Session',
     'Role',
     'User',
-    'Status Category',
+    'Features',
     'Status',
     'Location',
     'Client Profile',

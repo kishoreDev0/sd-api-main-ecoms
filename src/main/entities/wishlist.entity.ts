@@ -10,7 +10,7 @@ import {
 import { User } from './user.entity';
 import { Product } from './product.entity';
 
-@Entity('wishlist')
+@Entity('ta_wishlist')
 export class Wishlist {
   @PrimaryGeneratedColumn()
   id: number;

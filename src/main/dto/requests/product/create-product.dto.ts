@@ -7,14 +7,20 @@ export class CreateProductDTO {
   @ApiProperty()
   description: string;
 
+  @ApiProperty({ type: [String], required: false })
+  images?: string[];
+
   @ApiProperty()
-  collectionImage?: string;
+  category: string;
+
+  @ApiProperty({ type: [String], required: false })
+  features?: string[];
 
   @ApiProperty()
   price: number;
 
   @ApiProperty()
-  stock: number;
+  inStock: boolean;
 
   @ApiProperty()
   createdBy: number;

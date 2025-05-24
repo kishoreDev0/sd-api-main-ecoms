@@ -1,20 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProductDTO {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   name?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   description?: string;
 
-  @ApiProperty()
-  collectionImage?: string;
+  @ApiProperty({ type: [String], required: false })
+  images?: string[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  category?: string;
+
+  @ApiProperty({ type: [String], required: false })
+  features?: string[];
+
+  @ApiProperty({ required: false })
   price?: number;
 
-  @ApiProperty()
-  stock?: number;
+  @ApiProperty({ required: false })
+  inStock?: boolean;
 
   @ApiProperty()
   updatedBy: number;

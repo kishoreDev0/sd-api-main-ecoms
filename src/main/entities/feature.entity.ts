@@ -1,3 +1,4 @@
+// src/main/entities/feature.entity.ts
 import {
   Entity,
   Column,
@@ -7,33 +8,16 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { Product } from './product.entity';
 import { User } from './user.entity';
 
-@Entity('ta_product')
-export class Product {
+@Entity('ta_feature')
+export class Feature {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
-
-  @Column('varchar')
-  description: string;
-
-  @Column('simple-array', { nullable: true })
-  images: string[];
-
-  @Column()
-  category: string;
-
-  @Column('simple-array', { nullable: true })
-  features: string[];
-
-  @Column('decimal')
-  price: number;
-
-  @Column({ type: 'boolean', default: true })
-  inStock: boolean;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
@@ -49,4 +33,3 @@ export class Product {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
-
