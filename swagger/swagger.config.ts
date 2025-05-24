@@ -7,8 +7,8 @@ export const setupSwagger = (
   globalPrefix: string,
 ): void => {
   const options = new DocumentBuilder()
-    .setTitle('TA-TRACK API')
-    .setDescription('Welcome to TA-TRACK')
+    .setTitle('Ecommerce API')
+    .setDescription('Welcome to Ecommerce')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -24,7 +24,7 @@ function sortSwaggerTags(document: OpenAPIObject): void {
     'User Session',
     'Role',
     'User',
-    'Status Category',
+    'Features',
     'Status',
     'Location',
     'Client Profile',
