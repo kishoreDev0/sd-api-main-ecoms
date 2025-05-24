@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericResponseDto } from './generics/generic-response.dto';
+import { User } from 'src/main/entities/user.entity';
 
 export class FeatureResponseDto {
   @ApiProperty()
@@ -9,7 +10,7 @@ export class FeatureResponseDto {
   name: string;
 
   @ApiProperty()
-  createdBy: number;
+  createdBy: Partial<User>;
 
   @ApiProperty()
   createdAt: Date;

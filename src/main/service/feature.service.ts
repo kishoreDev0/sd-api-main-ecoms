@@ -28,41 +28,30 @@ export class FeatureService {
     });
 
     const savedFeature = await this.repo.save(feature);
-    const featureResponseDto = {
-      ...savedFeature,
-      createdBy: savedFeature.createdBy.id,
-      updatedBy: savedFeature.updatedBy.id,
-    };
-    return FEATURE_RESPONSES.FEATURE_CREATED(featureResponseDto);
+   
+    return FEATURE_RESPONSES.FEATURE_CREATED(savedFeature);
   }
 
   async update(id: number, dto: UpdateFeatureDTO): Promise<FeatureResponseWrapper> {
+
     const feature = await this.repo.findById(id);
     if (!feature) throw new NotFoundException(FEATURE_RESPONSES.FEATURE_NOT_FOUND());
 
     const updater = await this.userRepo.findUserById(dto.updatedBy);
+        
+
     Object.assign(feature, dto, { updatedBy: updater });
 
     const updatedFeature = await this.repo.save(feature);
-    const featureResponseDto = {
-      ...updatedFeature,
-      createdBy: updatedFeature.createdBy.id,
-      updatedBy: updatedFeature.updatedBy.id,
-    };
-    return FEATURE_RESPONSES.FEATURE_UPDATED(featureResponseDto);
+
+    return FEATURE_RESPONSES.FEATURE_UPDATED(updatedFeature);
   }
 
   async getAllFeatures(): Promise<FeaturesResponseWrapper> {
     const features = await this.repo.getAllFeatures();
-    if (!features.length) return FEATURE_RESPONSES.FEATURES_NOT_FOUND();
+    if (!features.length) return FEATURE_RESPONSES.FEATURES_NOT_FOUND();    
 
-    const featureResponseDtos = features.map(feature => ({
-      ...feature,
-      createdBy: feature.createdBy.id,
-      updatedBy: feature.updatedBy.id,
-    }));
-
-    return FEATURE_RESPONSES.FEATURES_FETCHED(featureResponseDtos);
+    return FEATURE_RESPONSES.FEATURES_FETCHED(features);
   }
 
   async delete(id: number): Promise<FeatureResponseWrapper> {

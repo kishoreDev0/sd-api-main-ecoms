@@ -25,14 +25,14 @@ export class FeatureRepository {
   async findById(id: number) {
     return this.repo.findOne({
       where: { id },
-      relations: ['product', 'createdBy', 'updatedBy'],
     });
   }
 
   async getAllFeatures(): Promise<Feature[]> {
-    return this.repo.find({
-      relations: ['product', 'createdBy', 'updatedBy'],
-      order: { createdAt: 'DESC' },
-    });
-  }
+  return this.repo.find({
+    relations: ['createdBy', 'updatedBy'],
+    order: { createdAt: 'DESC' },
+  });
+}
+
 }

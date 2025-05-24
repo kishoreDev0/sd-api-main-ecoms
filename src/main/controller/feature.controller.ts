@@ -23,8 +23,14 @@ export class FeatureController {
 
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() dto: UpdateFeatureDTO) {
-    return this.service.update(id, dto);
+  async update(@Param('id') id: number, @Body() dto: UpdateFeatureDTO) {
+    try{
+          const response = await this.service.update(id, dto);
+          return response;
+
+    }catch(error){
+       console.log(error  )
+    }
   }
     @Get()
     async findAll(): Promise<FeaturesResponseWrapper> {
