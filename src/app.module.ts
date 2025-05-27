@@ -12,6 +12,7 @@ import { ProductModule } from './main/modules/product.module';
 import { CartModule } from './main/modules/cart.module';
 import { WishlistModule } from './main/modules/wishlist.module';
 import { FeatureModule } from './main/modules/feature.module';
+import { CategoryModule } from './main/modules/category.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { FeatureModule } from './main/modules/feature.module';
     ProductModule,
     CartModule,
     WishlistModule,
-    FeatureModule
+    FeatureModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

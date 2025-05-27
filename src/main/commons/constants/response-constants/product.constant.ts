@@ -1,63 +1,41 @@
-import { HttpStatus } from '@nestjs/common';
-import { GenericResponseDto } from 'src/main/dto/responses/generics/generic-response.dto';
-import {
-  ProductResponseDto,
-  ProductResponseWrapper,
-  ProductsResponseWrapper,
-} from 'src/main/dto/responses/product-response.dto';
-
 export const PRODUCT_RESPONSES = {
-  PRODUCT_NOT_FOUND: (): GenericResponseDto<null> => ({
-    success: false,
-    message: 'Product not found',
-    statusCode: HttpStatus.NOT_FOUND,
-    data: null,
-  }),
-
-  PRODUCTS_NOT_FOUND: (): {
-    statusCode: number;
-    message: string;
-    success: boolean;
-  } => ({
-    success: false,
-    statusCode: HttpStatus.NOT_FOUND,
-    message: 'No products found',
-  }),
-
-  PRODUCT_CREATED: (data: ProductResponseDto): ProductResponseWrapper => ({
+  PRODUCT_CREATED: (data: any) => ({
     success: true,
-    statusCode: HttpStatus.CREATED,
+    statusCode: 201,
     message: 'Product created successfully',
     data,
   }),
-
-  PRODUCT_UPDATED: (data: ProductResponseDto): ProductResponseWrapper => ({
+   PRODUCT_BY_ID_FETCHED: (data: any, id:number) => ({
     success: true,
-    statusCode: HttpStatus.OK,
-    message: 'Product updated successfully',
+    statusCode: 201,
+    message: `Product fetched successfully with id ${id}`,
     data,
   }),
-
-  PRODUCT_FETCHED: (data: ProductResponseDto): ProductResponseWrapper => ({
+  PRODUCTS_FETCHED: (data: any[]) => ({
     success: true,
-    statusCode: HttpStatus.OK,
-    message: 'Product fetched successfully',
-    data,
-  }),
-
-  PRODUCTS_FETCHED: (
-    data: ProductResponseDto[],
-  ): ProductsResponseWrapper => ({
-    success: true,
-    statusCode: HttpStatus.OK,
+    statusCode: 200,
     message: 'Products fetched successfully',
     data,
   }),
-
-  PRODUCT_DELETED: (id: number): ProductResponseWrapper => ({
+  PRODUCT_UPDATED: (data: any) => ({
     success: true,
-    statusCode: HttpStatus.OK,
+    statusCode: 200,
+    message: 'Product updated successfully',
+    data,
+  }),
+  PRODUCT_DELETED: (id: number) => ({
+    success: true,
+    statusCode: 200,
     message: `Product with ID ${id} deleted successfully`,
-    data: null,
+  }),
+  PRODUCT_NOT_FOUND: () => ({
+    success: false,
+    statusCode: 404,
+    message: 'Product not found',
+  }),
+  PRODUCTS_NOT_FOUND: () => ({
+    success: false,
+    statusCode: 404,
+    message: 'No products found',
   }),
 };

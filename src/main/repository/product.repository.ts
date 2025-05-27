@@ -12,17 +12,6 @@ export class ProductRepository {
     private readonly logger: LoggerService,
   ) {}
 
-  async findProductById(id: number): Promise<Product | null> {
-    return await this.repository.findOne({
-      where: { id },
-      relations: ['createdBy', 'updatedBy'],
-    });
-  }
-
-  async getAllProducts(): Promise<Product[]> {
-    return await this.repository.find({ relations: ['createdBy', 'updatedBy'] });
-  }
-
   create(data: Partial<Product>): Product {
     return this.repository.create(data);
   }
@@ -31,7 +20,20 @@ export class ProductRepository {
     return await this.repository.save(product);
   }
 
-  async deleteById(id: number): Promise<void> {
+  async findById(id: number): Promise<Product | null> {
+    return await this.repository.findOne({
+      where: { id },
+      relations: ['category', 'createdBy', 'updatedBy'],
+    });
+  }
+
+  async getAll(): Promise<Product[]> {
+    return await this.repository.find({
+      relations: ['category', 'createdBy', 'updatedBy'],
+    });
+  }
+
+  async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }
 }

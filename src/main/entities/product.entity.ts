@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Category } from './category.entity'; 
 
 @Entity('ta_product')
 export class Product {
@@ -20,20 +21,26 @@ export class Product {
   @Column('varchar')
   description: string;
 
+   @Column('simple-json', { nullable: true })
+  imagesPath: string[];
+
+  // ✅ Replace string with Category relation
+  @ManyToOne(() => Category)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
+
   @Column('simple-array', { nullable: true })
-  images: string[];
+  features: number[];
 
   @Column()
-  category: string;
-
-  @Column('simple-array', { nullable: true })
-  features: string[];
-
-  @Column('decimal')
   price: number;
 
   @Column({ type: 'boolean', default: true })
   inStock: boolean;
+
+  @Column({ type: 'int', default: 0 })
+  noOfStock: number;
+
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
@@ -49,4 +56,3 @@ export class Product {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
-

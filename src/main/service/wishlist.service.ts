@@ -26,7 +26,7 @@ export class WishlistService {
     const user = await this.userRepository.findUserById(dto.userId);
     if (!user) return USER_RESPONSES.USER_NOT_FOUND();
 
-    const product = await this.productRepository.findProductById(dto.productId);
+    const product = await this.productRepository.findById(dto.productId);
     if (!product) return PRODUCT_RESPONSES.PRODUCT_NOT_FOUND();
 
     const creator = await this.userRepository.findUserById(dto.createdBy);
