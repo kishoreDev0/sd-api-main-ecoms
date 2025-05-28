@@ -15,16 +15,12 @@ export class Wishlist {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: 'product_id' })
-  product: Product;
-
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'varchar', nullable: true })
-  status: string;
+  @Column('simple-array')
+  productIds: number[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

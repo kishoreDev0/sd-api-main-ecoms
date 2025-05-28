@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   UseGuards,
+  ParseIntPipe
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { WishlistService } from '../service/wishlist.service';
@@ -19,38 +20,57 @@ import {
 import { AuthGuard } from '../commons/guards/auth.guard';
 import { ApiHeadersForAuth } from '../commons/guards/auth-headers.decorator';
 
-@ApiTags('Wishlist')
-@Controller('v1/wishlist')
+@ApiTags('Wishlists')
+@Controller('v1/wishlists')
 @UseGuards(AuthGuard)
 @ApiHeadersForAuth()
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
-  @Post()
-  async create(@Body() dto: CreateWishlistDTO): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.createWishlist(dto);
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() dto: UpdateWishlistDTO,
-  ): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.updateWishlist(id, dto);
-  }
-
-  @Get()
-  async findAll(): Promise<WishlistsResponseWrapper> {
-    return this.wishlistService.getAllWishlists();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.getWishlistById(id);
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.deleteWishlist(id);
-  }
+   @Post()
+    create(@Body() dto: CreateWishlistDTO): Promise<WishlistResponseWrapper> {
+     try{
+       const result =  this.wishlistService.create(dto);
+       return result
+     }
+     catch(error){
+      console.log(error)
+     }
+    }
+  
+    @Patch(':id')
+    async update(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.update(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+  
+    @Get()
+    async findAll(): Promise<WishlistsResponseWrapper> {
+      const result =  this.wishlistService.getAllWishlists();
+      return result
+    }
+  
+    @Get(':userId')
+    async getByUserId(
+      @Param('userId', ParseIntPipe) userId: number,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+          const cart = await this.wishlistService.getWishlistByUserId(userId);
+          return cart 
+        } catch (error) {
+          console.error(error);
+      }
+    }
+  
+    @Delete(':id')
+    delete(@Param('id', ParseIntPipe) id: number): Promise<WishlistResponseWrapper> {
+      return this.wishlistService.delete(id);
+    }
 }

@@ -21,7 +21,7 @@ export class Product {
   @Column('varchar')
   description: string;
 
-   @Column('simple-json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   imagesPath: string[];
 
   // ✅ Replace string with Category relation

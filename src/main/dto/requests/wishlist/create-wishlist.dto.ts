@@ -1,15 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ArrayNotEmpty, IsArray, IsNumber } from 'class-validator';
 
 export class CreateWishlistDTO {
+
   @ApiProperty()
+  @IsNumber()
   userId: number;
 
   @ApiProperty()
-  productId: number;
-
-  @ApiProperty({ required: false })
-  status?: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  productIds: number[];
 
   @ApiProperty()
+  @IsNumber()
   createdBy: number;
 }

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCartDTO {
   @ApiProperty()
-  productId?: number;
+  productIds?: number[];
 
   @ApiProperty()
   updatedBy: number;

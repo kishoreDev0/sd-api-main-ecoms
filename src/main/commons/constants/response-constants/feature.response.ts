@@ -30,6 +30,7 @@ export const FEATURE_RESPONSES = {
     message: 'Feature created successfully',
     data,
   }),
+  
 
   FEATURE_UPDATED: (data: FeatureResponseDto): FeatureResponseWrapper => ({
     success: true,

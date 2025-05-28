@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ArrayNotEmpty, IsArray, IsNumber } from 'class-validator';
 
 export class UpdateWishlistDTO {
-  @ApiProperty({ required: false })
-  status?: string;
+  @ApiProperty()
+  @IsArray()
+  @ArrayNotEmpty()
+  productIds: number[];
 
   @ApiProperty()
+  @IsNumber()
   updatedBy: number;
 }
