@@ -1,25 +1,23 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
-import { User } from '../entities/user.entity';
 import { ProductService } from '../service/product.service';
-import { ProductController } from '../controller/product.controller';
 import { ProductRepository } from '../repository/product.repository';
-import { UserRepository } from '../repository/user.repository';
-import { LoggerModule } from './logger.module';
-import { AuthenticationModule } from './authentication.module';
-import { UserSessionModule } from './user-session.module';
-
+import { ProductController } from '../controller/product.controller';
+import { CategoryModule } from './category.module'; // assuming this exists
+import { UserModule } from './user.module'; // assuming this exists
+import { LoggerModule } from './logger.module'; // assuming this exists
+import { User } from '../entities/user.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product, User]),
     LoggerModule,
-    forwardRef(() => UserSessionModule),
-    forwardRef(() => AuthenticationModule),
+    forwardRef(() => CategoryModule),
+    forwardRef(() => UserModule),
   ],
+  providers: [ProductService, ProductRepository],
   controllers: [ProductController],
-  providers: [ProductService, ProductRepository, UserRepository],
-  exports: [ProductService, ProductRepository],
+  exports: [ProductService],
 })
 export class ProductModule {}

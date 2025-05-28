@@ -1,27 +1,52 @@
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsBoolean,
+  IsDecimal,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateProductDTO {
-  @ApiProperty()
+export class CreateProductDto {
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ type: [String], required: false })
-  images?: string[];
+  // We'll expect images as base64 strings or image URLs (if stored externally)
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  imagesPath?: string[];
 
-  @ApiProperty()
-  category: string;
+  @IsNumber()
+  @Type(() => Number)
+  categoryId: number;
 
-  @ApiProperty({ type: [String], required: false })
-  features?: string[];
+  @IsArray()
+  @IsOptional()
+  @IsNumber({}, { each: true })
+  features?: number[];
 
-  @ApiProperty()
+  @IsNumber()
+  @Type(() => Number)
   price: number;
 
-  @ApiProperty()
-  inStock: boolean;
+  @IsNumber()
+  @Type(() => Number)
+  noOfStock: number;
 
-  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  inStock?: boolean;
+
+  @IsNumber()
+  @Type(() => Number)
   createdBy: number;
 }

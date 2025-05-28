@@ -1,27 +1,13 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateProductDto } from './create-product.dto';
+import { IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateProductDTO {
-  @ApiProperty({ required: false })
-  name?: string;
-
-  @ApiProperty({ required: false })
-  description?: string;
-
-  @ApiProperty({ type: [String], required: false })
-  images?: string[];
-
-  @ApiProperty({ required: false })
-  category?: string;
-
-  @ApiProperty({ type: [String], required: false })
-  features?: string[];
-
-  @ApiProperty({ required: false })
-  price?: number;
-
-  @ApiProperty({ required: false })
-  inStock?: boolean;
+export class UpdateProductDto extends PartialType(CreateProductDto) {
 
   @ApiProperty()
+  @IsNumber()
   updatedBy: number;
+  
 }

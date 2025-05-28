@@ -15,7 +15,7 @@ export class ProductResponseDto {
   images: string[];
 
   @ApiProperty()
-  category: string;
+  category: number;
 
   @ApiProperty({ type: [String] })
   features: string[];
@@ -24,7 +24,16 @@ export class ProductResponseDto {
   price: number;
 
   @ApiProperty()
+  noOfStock: number;
+
+  @ApiProperty()
   inStock: boolean;
+
+  @ApiProperty()
+  createdBy: number;
+
+  @ApiProperty()
+  updatedBy: number;
 
   @ApiProperty()
   createdAt: Date;
@@ -32,7 +41,5 @@ export class ProductResponseDto {
   @ApiProperty()
   updatedAt: Date;
 }
-
-
 export type ProductResponseWrapper = GenericResponseDto<ProductResponseDto>;
 export type ProductsResponseWrapper = GenericResponseDto<ProductResponseDto[]>;

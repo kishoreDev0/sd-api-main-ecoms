@@ -21,7 +21,6 @@ export class FeatureController {
     return this.service.create(createFeatureDto);
     }
 
-
   @Patch(':id')
   async update(@Param('id') id: number, @Body() dto: UpdateFeatureDTO) {
     try{
