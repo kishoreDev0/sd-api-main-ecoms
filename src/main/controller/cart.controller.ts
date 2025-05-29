@@ -12,7 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { CartService } from '../service/cart.service';
 import { CreateCartDTO } from '../dto/requests/cart/create-cart.dto';
-import { UpdateCartDTO } from '../dto/requests/cart/update-cart.dto';
+import { UpdateCartDTO, UpdateCartListDTO } from '../dto/requests/cart/update-cart.dto';
 import { AuthGuard } from '../commons/guards/auth.guard';
 import { ApiHeadersForAuth } from '../commons/guards/auth-headers.decorator';
 import {
@@ -51,18 +51,31 @@ export class CartController {
     }
   }
 
+   @Patch('/list/:id')
+    async updateList(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateCartListDTO,
+    ): Promise<CartResponseWrapper> {
+      try {
+        return await this.cartService.updatelist(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+
   @Get()
   async findAll(): Promise<CartsResponseWrapper> {
     const result =  this.cartService.getAllCarts();
     return result
   }
 
-  @Get(':userId')
+  @Get(':id')
   async getByUserId(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<CartResponseWrapper> {
     try {
-        const cart = await this.cartService.getCartByUserId(userId);
+        const cart = await this.cartService.getCartByUserId(id);
         return cart 
       } catch (error) {
         console.error(error);

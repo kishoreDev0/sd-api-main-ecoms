@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CartRepository } from '../repository/cart.repository';
 import { CreateCartDTO } from '../dto/requests/cart/create-cart.dto';
-import { UpdateCartDTO } from '../dto/requests/cart/update-cart.dto';
+import { UpdateCartDTO, UpdateCartListDTO } from '../dto/requests/cart/update-cart.dto';
 import { UserRepository } from '../repository/user.repository';
 import {
   CartResponseWrapper,
@@ -28,9 +28,9 @@ export class CartService {
       const user = await this.userRepo.findUserById(dto.userId);
       if (!user) throw new NotFoundException('User not found');
 
-      const existingUser = await this.getCartByUserId(user.id);
+      const existingUser = await this.repo.findById(user.id);
       if(existingUser){
-        this.logger.log("User has already present");
+        this.logger.log("User's cart has already present");
         return CART_RESPONSES.USER_HAS_ALREADY_PRESENT()
       }
 
@@ -67,6 +67,30 @@ export class CartService {
     }
   }
 
+  async updatelist(id: number, dto: UpdateCartListDTO): Promise<CartResponseWrapper> {
+        try {
+          const cart = await this.repo.findByUserId(id);
+          if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
+
+          const updater = await this.userRepo.findUserById(dto.updatedBy);
+          if (!updater) throw new NotFoundException('Updater user not found');
+
+          const prdId = String(dto.productId)
+          const index = cart.productIds.findIndex(id => String(id) === String(dto.productId));
+
+          if (index > -1) {
+            cart.productIds.splice(index, 1);
+          } else {
+            cart.productIds.push(dto.productId);
+          }
+          cart.updatedBy = { id: updater.id } as any;
+          const updatedWishlist = await this.repo.save(cart);
+          return CART_RESPONSES.CART_UPDATED(updatedWishlist);
+        } catch (error) {
+          throw error;
+        }
+    }
+
   async getAllCarts(): Promise<CartsResponseWrapper> {
     try {
       const carts = await this.repo.getAllCarts();
@@ -80,7 +104,7 @@ export class CartService {
 
   async getCartByUserId(userId: number): Promise<CartResponseWrapper | null> {
     const cart = await this.repo.findByUserId(userId);
-    if (!cart) return null;
+    if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
     return CART_RESPONSES.CARTS_FETCHED_BY_USER_ID(cart)
   }
 

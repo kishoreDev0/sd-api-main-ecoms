@@ -26,13 +26,11 @@ function sortSwaggerTags(document: OpenAPIObject): void {
     'User',
     'Features',
     'Product',
-    'Location',
-    'Client Profile',
-    'Client Location',
-    'Position Details',
-    'Requirement Details',
-    'Candidates Profile',
-    'Excel-Template'];
+    'Carts',
+    'categories',
+    'products',
+    'Wishlists',
+    ];
   const taggedPaths: Record<string, Record<string, any>> = {};
 
   for (const [path, pathItem] of Object.entries(document.paths)) {

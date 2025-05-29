@@ -11,3 +11,14 @@ export class UpdateWishlistDTO {
   @IsNumber()
   updatedBy: number;
 }
+export class UpdateWishlistItemDTO{
+
+  @ApiProperty()
+  @IsNumber()
+  updatedBy: number;
+
+  @ApiProperty()
+  @IsNumber()
+  productId: number;
+
+}

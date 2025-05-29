@@ -12,7 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { WishlistService } from '../service/wishlist.service';
 import { CreateWishlistDTO } from '../dto/requests/wishlist/create-wishlist.dto';
-import { UpdateWishlistDTO } from '../dto/requests/wishlist/update-wishlist.dto';
+import { UpdateWishlistDTO, UpdateWishlistItemDTO } from '../dto/requests/wishlist/update-wishlist.dto';
 import {
   WishlistResponseWrapper,
   WishlistsResponseWrapper,
@@ -50,6 +50,20 @@ export class WishlistController {
         throw error;
       }
     }
+
+    @Patch('/list/:id')
+    async updateList(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistItemDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.updatelist(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+
   
     @Get()
     async findAll(): Promise<WishlistsResponseWrapper> {
@@ -57,12 +71,11 @@ export class WishlistController {
       return result
     }
   
-    @Get(':userId')
+    @Get(':id')
     async getByUserId(
-      @Param('userId', ParseIntPipe) userId: number,
-    ): Promise<WishlistResponseWrapper> {
+      @Param('id', ParseIntPipe) id: number ): Promise<WishlistResponseWrapper> {
       try {
-          const cart = await this.wishlistService.getWishlistByUserId(userId);
+          const cart = await this.wishlistService.getWishlistByUserId(id);
           return cart 
         } catch (error) {
           console.error(error);

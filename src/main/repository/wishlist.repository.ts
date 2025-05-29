@@ -35,10 +35,11 @@ export class WishlistRepository {
       });
     }
   
-    async findByUserId(userId: number): Promise<Wishlist | null> {
-      return this.repo.findOne({
-        where: { user: { id: userId } },
-        relations: ['user', 'createdBy', 'updatedBy'],
-      });
-    }
+   async findByUserId(userId: number): Promise<Wishlist | null> {
+  return this.repo.findOne({
+    where: { user: { id: userId } },
+    relations: ['user', 'createdBy', 'updatedBy'],
+  });
+}
+
 }

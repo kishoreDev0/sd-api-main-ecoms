@@ -3,7 +3,7 @@ import { WishlistRepository } from '../repository/wishlist.repository';
 import { UserRepository } from '../repository/user.repository';
 import { ProductRepository } from '../repository/product.repository';
 import { CreateWishlistDTO } from '../dto/requests/wishlist/create-wishlist.dto';
-import { UpdateWishlistDTO } from '../dto/requests/wishlist/update-wishlist.dto';
+import { UpdateWishlistDTO, UpdateWishlistItemDTO } from '../dto/requests/wishlist/update-wishlist.dto';
 import {
   WishlistResponseWrapper,
   WishlistsResponseWrapper,
@@ -67,6 +67,31 @@ export class WishlistService {
         throw error;
       }
     }
+    async updatelist(id: number, dto: UpdateWishlistItemDTO): Promise<WishlistResponseWrapper> {
+        try {
+          const cart = await this.repo.findByUserId(id);
+          console.log(cart)
+          if (!cart) return WISHLIST_RESPONSES.WISHLIST_NOT_FOUND();
+
+          const updater = await this.userRepo.findUserById(dto.updatedBy);
+          if (!updater) throw new NotFoundException('Updater user not found');
+
+          const prdId = String(dto.productId)
+          const index = cart.productIds.findIndex(id => String(id) === String(dto.productId));
+
+          if (index > -1) {
+            cart.productIds.splice(index, 1);
+          } else {
+            cart.productIds.push(dto.productId);
+          }
+          cart.updatedBy = { id: updater.id } as any;
+          const updatedWishlist = await this.repo.save(cart);
+          return WISHLIST_RESPONSES.WISHLIST_UPDATED(updatedWishlist);
+        } catch (error) {
+          throw error;
+        }
+    }
+
   
     async getAllWishlists(): Promise<WishlistsResponseWrapper> {
       try {
@@ -80,8 +105,9 @@ export class WishlistService {
     }
   
     async getWishlistByUserId(userId: number): Promise<WishlistResponseWrapper | null> {
-      const cart = await this.repo.findByUserId(userId);
-      if (!cart) return null;
+      const cart = await this.repo.findByUserId(Number(userId));
+      console.log(cart)
+      if (!cart) return WISHLIST_RESPONSES.WISHLIST_NOT_FOUND();
       return WISHLIST_RESPONSES.WISHLISTS_FETCHED_BY_USER_ID(cart)
     }
   

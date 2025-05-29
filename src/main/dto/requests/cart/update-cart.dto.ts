@@ -7,3 +7,11 @@ export class UpdateCartDTO {
   @ApiProperty()
   updatedBy: number;
 }
+
+export class UpdateCartListDTO {
+  @ApiProperty()
+  productId: number;
+
+  @ApiProperty()
+  updatedBy: number;
+}
