@@ -24,6 +24,9 @@ export class ProductResponseDto {
   price: number;
 
   @ApiProperty()
+  totalNoOfStock:number
+
+  @ApiProperty()
   noOfStock: number;
 
   @ApiProperty()

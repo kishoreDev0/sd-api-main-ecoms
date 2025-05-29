@@ -41,6 +41,8 @@ export class Product {
   @Column({ type: 'int', default: 0 })
   noOfStock: number;
 
+  @Column()
+  totalNoOfStock: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

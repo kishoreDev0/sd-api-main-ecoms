@@ -33,6 +33,7 @@ export class ProductService {
         price: dto.price,
         inStock: dto.inStock ?? true,
         noOfStock: dto.noOfStock,
+        totalNoOfStock:dto.totalNoOfStock,
         category,
         createdBy: creator,
         updatedBy: creator,
