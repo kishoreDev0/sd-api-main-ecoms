@@ -1,17 +1,23 @@
-import { ApiProperty } from '@nestjs/swagger';
+  import { ApiProperty } from '@nestjs/swagger';
+  import { ArrayNotEmpty, IsArray, IsNumber } from 'class-validator';
 
-export class UpdateCartDTO {
-  @ApiProperty()
-  productIds?: number[];
+  export class UpdateCartDTO {
+    @ApiProperty()
+    @IsArray()
+    @ArrayNotEmpty()
+    productIds?: number[];
 
-  @ApiProperty()
-  updatedBy: number;
-}
+    @ApiProperty()
+    @IsNumber()
+    updatedBy: number;
+  }
 
-export class UpdateCartListDTO {
-  @ApiProperty()
-  productId: number;
+  export class UpdateCartListDTO {
+    @ApiProperty()
+    @IsNumber()
+    productId: number;
 
-  @ApiProperty()
-  updatedBy: number;
-}
+    @ApiProperty()
+    @IsNumber()
+    updatedBy: number;
+  }

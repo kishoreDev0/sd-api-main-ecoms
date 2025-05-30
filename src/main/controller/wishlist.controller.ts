@@ -64,6 +64,20 @@ export class WishlistController {
       }
     }
 
+
+    @Patch('/move/:id')
+    async moveListToCart(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistItemDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.movelistToCart(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+
   
     @Get()
     async findAll(): Promise<WishlistsResponseWrapper> {

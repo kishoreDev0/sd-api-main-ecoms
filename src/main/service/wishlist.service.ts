@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { WishlistRepository } from '../repository/wishlist.repository';
 import { UserRepository } from '../repository/user.repository';
 import { ProductRepository } from '../repository/product.repository';
+import { CartRepository } from '../repository/cart.repository';
 import { CreateWishlistDTO } from '../dto/requests/wishlist/create-wishlist.dto';
 import { UpdateWishlistDTO, UpdateWishlistItemDTO } from '../dto/requests/wishlist/update-wishlist.dto';
 import {
@@ -10,6 +11,8 @@ import {
 } from '../dto/responses/wishlist-response.dto';
 import { LoggerService } from './logger.service';
 import { WISHLIST_RESPONSES } from '../commons/constants/response-constants/wishlist.constant';
+import { CART_RESPONSES } from '../commons/constants/response-constants/cart.constant';
+import { USER_RESPONSES } from '../commons/constants/response-constants/user.constant';
 
 
 @Injectable()
@@ -18,6 +21,7 @@ export class WishlistService {
     private readonly repo: WishlistRepository,
     private readonly userRepo: UserRepository,
     private readonly productRepository: ProductRepository,
+    private readonly cartRepository : CartRepository,
     private readonly logger: LoggerService,
   ) {}
   
@@ -91,6 +95,37 @@ export class WishlistService {
           throw error;
         }
     }
+
+    async movelistToCart(id: number, dto: UpdateWishlistItemDTO): Promise<WishlistResponseWrapper> {
+        try {
+          const wishlist = await this.repo.findByUserId(id);
+          if (!wishlist) return WISHLIST_RESPONSES.WISHLIST_NOT_FOUND();
+
+          const cart = await this.cartRepository.findByUserId(id)
+          if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
+
+          const updater = await this.userRepo.findUserById(dto.updatedBy);
+          if (!updater) return USER_RESPONSES.USERS_NOT_FOUND();
+
+          const prdId = String(dto.productId)
+          const index = cart.productIds.findIndex(id => String(id) === String(dto.productId));
+
+          if (index > -1) {
+              return WISHLIST_RESPONSES.WISHLISTS_CART_ALREADY_PRESENT()
+          } else {
+            cart.productIds.push(dto.productId);
+          }
+
+          
+          cart.updatedBy = { id: updater.id } as any;
+          wishlist.updatedBy = { id: updater.id } as any;
+          const updatedWishlist = await this.repo.save(wishlist);
+           await this.cartRepository.save(cart);
+          return WISHLIST_RESPONSES.WISHLIST_MOVED(updatedWishlist);
+        } catch (error) {
+          throw error;
+        }
+    } 
 
   
     async getAllWishlists(): Promise<WishlistsResponseWrapper> {

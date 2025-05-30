@@ -19,6 +19,12 @@ export const WISHLIST_RESPONSES = {
     message: 'Wishlist not found',
     data: [],
   }),
+   WISHLISTS_CART_ALREADY_PRESENT: (): WishlistResponseWrapper => ({
+    success: false,
+    statusCode: HttpStatus.NOT_FOUND,
+    message: 'Product already added in cart',
+    
+  }),
 
   USER_HAS_ALREADY_PRESENT: (): GenericResponseDto<null> => ({
     success: false,
@@ -58,6 +64,12 @@ export const WISHLIST_RESPONSES = {
     success: true,
     statusCode: HttpStatus.OK,
     message: 'Wishlist updated successfully',
+    data,
+  }),
+    WISHLIST_MOVED: (data: WishlistResponseDto): WishlistResponseWrapper => ({
+    success: true,
+    statusCode: HttpStatus.OK,
+    message: 'Product moved to cart successfully',
     data,
   }),
 

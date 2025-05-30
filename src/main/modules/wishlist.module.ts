@@ -11,6 +11,7 @@ import { UserRepository } from '../repository/user.repository';
 import { LoggerModule } from './logger.module';
 import { AuthenticationModule } from './authentication.module';
 import { UserSessionModule } from './user-session.module';
+import { CartModule } from './cart.module'; 
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserSessionModule } from './user-session.module';
     LoggerModule,
      forwardRef(() => UserSessionModule),
     forwardRef(() => AuthenticationModule),
+    forwardRef(() => CartModule),
   ],
   controllers: [WishlistController],
   providers: [
@@ -25,6 +27,7 @@ import { UserSessionModule } from './user-session.module';
     WishlistRepository,
     UserRepository,
     ProductRepository,
+    
   ],
   exports: [WishlistService, WishlistRepository],
 })

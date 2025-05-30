@@ -57,7 +57,8 @@ export class CartController {
       @Body() dto: UpdateCartListDTO,
     ): Promise<CartResponseWrapper> {
       try {
-        return await this.cartService.updatelist(id, dto);
+        const result =  await this.cartService.updatelist(id, dto);
+        return result;
       } catch (error) {
         console.error(error);
         throw error;
