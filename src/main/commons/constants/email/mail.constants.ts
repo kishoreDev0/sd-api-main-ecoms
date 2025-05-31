@@ -3,7 +3,11 @@ export const mailTemplates = {
     registration: './registration',
     forgotPassword: './reset-password',
     newPassword: './new-password',
+   
   },
+  mailFunction:{
+     orderConfirm: './order-confirmation'
+  }
 };
 
 export const mailSubject = {
@@ -12,6 +16,9 @@ export const mailSubject = {
     forgotPassword: 'Password Reset',
     newPassword: 'New Password',
   },
+  mailFunction:{
+    orderConfirm: 'Your Order Has Been Confirmed – Thank You for Shopping with Us!'
+  }
 };
 
 export const assetsHostingUrl = {

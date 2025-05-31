@@ -12,6 +12,12 @@ import { LoggerService } from './logger.service';
 import { OrderStatus } from '../entities/order.entity';
 import { USER_RESPONSES } from '../commons/constants/response-constants/user.constant';
 import { CartRepository } from '../repository/cart.repository';
+import { MailService } from '../email/mail.service';
+import {
+  mailSubject,
+  mailTemplates,
+} from 'src/main/commons/constants/email/mail.constants';
+import { ProductRepository } from '../repository/product.repository';
 
 @Injectable()
 export class OrderService {
@@ -19,7 +25,9 @@ export class OrderService {
     private readonly repo: OrderRepository,
     private readonly userRepo: UserRepository,
     private readonly cartRepo:CartRepository,
+    private readonly prodRepo:ProductRepository,
     private readonly logger: LoggerService,
+     private readonly mailService: MailService,
   ) {}
 
   async create(dto: CreateOrderDTO): Promise<OrderResponseWrapper> {
@@ -58,6 +66,44 @@ export class OrderService {
     await this.cartRepo.save(userCart)
 
     const savedOrder = await this.repo.save(order);
+
+    // product 
+      const allProducts = await this.prodRepo.getAll();
+      const productQuantities = dto.productQuantity;
+
+      const result = productQuantities
+      .map(({ product_id, quantity }) => {
+        const product = allProducts.find(p => p.id === Number(product_id));
+        if (!product) return null; // skip if product not found
+        return {
+          name: product.name,
+          price: product.price,
+          quantity: quantity,
+        };
+      })
+      .filter(Boolean);
+
+     
+
+      console.log(result);
+
+    const context ={
+      name:user.firstName +' ' + user.lastName,
+      orderId:order.id,
+      address:order.shippingAddress,
+      product : result,
+      trackUrl:'',
+      creatDate:order.createdAt,
+      subTotal:order.totalAmount
+      
+    }
+
+    // mailer service
+    await this.mailService.sendMail(user.officialEmail,
+      mailSubject.mailFunction.orderConfirm,
+      mailTemplates.mailFunction.orderConfirm, 
+      context
+    )
 
     return ORDER_RESPONSES.ORDER_CREATED(savedOrder);
   } catch (error) {
