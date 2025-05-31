@@ -17,23 +17,43 @@ export class ProductRepository {
   }
 
   async save(product: Product): Promise<Product> {
-    return await this.repository.save(product);
+    try {
+      return await this.repository.save(product);
+    } catch (error) {
+      this.logger.error(   error);
+      throw error;
+    }
   }
 
   async findById(id: number): Promise<Product | null> {
-    return await this.repository.findOne({
-      where: { id },
-      relations: ['category', 'createdBy', 'updatedBy'],
-    });
+    try {
+      return await this.repository.findOne({
+        where: { id },
+        relations: ['category', 'createdBy', 'updatedBy'],
+      });
+    } catch (error) {
+      this.logger.error( error);
+      throw error;
+    }
   }
 
   async getAll(): Promise<Product[]> {
-    return await this.repository.find({
-      relations: ['category', 'createdBy', 'updatedBy'],
-    });
+    try {
+      return await this.repository.find({
+        relations: ['category', 'createdBy', 'updatedBy'],
+      });
+    } catch (error) {
+      this.logger.error( error);
+      throw error;
+    }
   }
 
   async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
+    try {
+      await this.repository.delete(id);
+    } catch (error) {
+      this.logger.error( error);
+      throw error;
+    }
   }
 }

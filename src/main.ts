@@ -17,8 +17,7 @@ export async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  app.useStaticAssets(join(__dirname, '..', 'src'));
-  console.log(__dirname, '..', 'src');
+  app.useStaticAssets(join(process.cwd(), 'public'));
  
 
   const dataSource = app.get(DataSource);

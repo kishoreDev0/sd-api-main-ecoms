@@ -21,7 +21,7 @@ export class Product {
   @Column('varchar')
   description: string;
 
-   @Column('simple-json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   imagesPath: string[];
 
   // ✅ Replace string with Category relation
@@ -41,6 +41,8 @@ export class Product {
   @Column({ type: 'int', default: 0 })
   noOfStock: number;
 
+  @Column()
+  totalNoOfStock: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

@@ -2,13 +2,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Product } from './product.entity';
 
 @Entity('ta_cart')
 export class Cart {
@@ -19,9 +18,8 @@ export class Cart {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: 'product_id' })
-  product: Product;
+  @Column('simple-array')
+  productIds: number[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

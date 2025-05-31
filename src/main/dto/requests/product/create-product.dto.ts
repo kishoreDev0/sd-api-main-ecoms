@@ -40,6 +40,10 @@ export class CreateProductDto {
 
   @IsNumber()
   @Type(() => Number)
+  totalNoOfStock: number;
+
+  @IsNumber()
+  @Type(() => Number)
   noOfStock: number;
 
   @IsBoolean()

@@ -7,11 +7,12 @@ import {
   Param,
   Body,
   UseGuards,
+  ParseIntPipe
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { WishlistService } from '../service/wishlist.service';
 import { CreateWishlistDTO } from '../dto/requests/wishlist/create-wishlist.dto';
-import { UpdateWishlistDTO } from '../dto/requests/wishlist/update-wishlist.dto';
+import { UpdateWishlistDTO, UpdateWishlistItemDTO } from '../dto/requests/wishlist/update-wishlist.dto';
 import {
   WishlistResponseWrapper,
   WishlistsResponseWrapper,
@@ -19,38 +20,84 @@ import {
 import { AuthGuard } from '../commons/guards/auth.guard';
 import { ApiHeadersForAuth } from '../commons/guards/auth-headers.decorator';
 
-@ApiTags('Wishlist')
-@Controller('v1/wishlist')
+@ApiTags('Wishlists')
+@Controller('v1/wishlists')
 @UseGuards(AuthGuard)
 @ApiHeadersForAuth()
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
-  @Post()
-  async create(@Body() dto: CreateWishlistDTO): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.createWishlist(dto);
-  }
+   @Post()
+    create(@Body() dto: CreateWishlistDTO): Promise<WishlistResponseWrapper> {
+     try{
+       const result =  this.wishlistService.create(dto);
+       return result
+     }
+     catch(error){
+      console.log(error)
+     }
+    }
+  
+    @Patch(':id')
+    async update(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.update(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() dto: UpdateWishlistDTO,
-  ): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.updateWishlist(id, dto);
-  }
+    @Patch('/list/:id')
+    async updateList(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistItemDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.updatelist(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
 
-  @Get()
-  async findAll(): Promise<WishlistsResponseWrapper> {
-    return this.wishlistService.getAllWishlists();
-  }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.getWishlistById(id);
-  }
+    @Patch('/move/:id')
+    async moveListToCart(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() dto: UpdateWishlistItemDTO,
+    ): Promise<WishlistResponseWrapper> {
+      try {
+        return await this.wishlistService.movelistToCart(id, dto);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
 
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<WishlistResponseWrapper> {
-    return this.wishlistService.deleteWishlist(id);
-  }
+  
+    @Get()
+    async findAll(): Promise<WishlistsResponseWrapper> {
+      const result =  this.wishlistService.getAllWishlists();
+      return result
+    }
+  
+    @Get(':id')
+    async getByUserId(
+      @Param('id', ParseIntPipe) id: number ): Promise<WishlistResponseWrapper> {
+      try {
+          const cart = await this.wishlistService.getWishlistByUserId(id);
+          return cart 
+        } catch (error) {
+          console.error(error);
+      }
+    }
+  
+    @Delete(':id')
+    delete(@Param('id', ParseIntPipe) id: number): Promise<WishlistResponseWrapper> {
+      return this.wishlistService.delete(id);
+    }
 }

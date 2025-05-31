@@ -1,39 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cart } from 'src/main/entities/cart.entity';
 import { Repository } from 'typeorm';
-import { Cart } from '../entities/cart.entity';
-import { LoggerService } from '../service/logger.service';
 
 @Injectable()
 export class CartRepository {
   constructor(
     @InjectRepository(Cart)
-    private readonly repository: Repository<Cart>,
-    private readonly logger: LoggerService,
+    private readonly repo: Repository<Cart>,
   ) {}
 
-  async findById(id: number): Promise<Cart | null> {
-    return await this.repository.findOne({
+  create(data: Partial<Cart>){
+    return this.repo.create(data);
+  }
+
+  async save(cart: Cart){
+    return this.repo.save(cart);
+  }
+
+  async deleteById(id: number){
+    await this.repo.delete(id);
+  }
+
+  async findById(id: number) {
+    return this.repo.findOne({
       where: { id },
-      relations: ['user', 'product', 'createdBy', 'updatedBy'],
+      relations: ['user', 'createdBy', 'updatedBy'],
     });
   }
 
-  async getAll(): Promise<Cart[]> {
-    return await this.repository.find({
-      relations: ['user', 'product'],
+  async getAllCarts(): Promise<Cart[]> {
+    return this.repo.find({
+      relations: ['user', 'createdBy', 'updatedBy'],
     });
   }
 
-  create(data: Partial<Cart>): Cart {
-    return this.repository.create(data);
-  }
-
-  async save(cart: Cart): Promise<Cart> {
-    return this.repository.save(cart);
-  }
-
-  async deleteById(id: number): Promise<void> {
-    await this.repository.delete(id);
+  async findByUserId(userId: number): Promise<Cart | null> {
+    return this.repo.findOne({
+      where: { user: { id: userId } },
+      relations: ['user', 'createdBy', 'updatedBy'],
+    });
   }
 }

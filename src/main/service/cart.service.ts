@@ -1,128 +1,124 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CartRepository } from '../repository/cart.repository';
-import { UserRepository } from '../repository/user.repository';
-import { ProductRepository } from '../repository/product.repository';
 import { CreateCartDTO } from '../dto/requests/cart/create-cart.dto';
-import { UpdateCartDTO } from '../dto/requests/cart/update-cart.dto';
+import { UpdateCartDTO, UpdateCartListDTO } from '../dto/requests/cart/update-cart.dto';
+import { UserRepository } from '../repository/user.repository';
 import {
   CartResponseWrapper,
   CartsResponseWrapper,
+  CartResponseDto,
 } from '../dto/responses/cart-response.dto';
-import { CART_RESPONSES } from '../commons/constants/response-constants/cart.constant';
-import { USER_RESPONSES } from '../commons/constants/response-constants/user.constant';
-import { PRODUCT_RESPONSES } from '../commons/constants/response-constants/product.constant';
+import { CART_RESPONSES } from '../commons/constants/response-constants/cart.constant'; 
 import { LoggerService } from './logger.service';
+
 
 @Injectable()
 export class CartService {
   constructor(
-    private readonly cartRepository: CartRepository,
-    private readonly userRepository: UserRepository,
-    private readonly productRepository: ProductRepository,
+    private readonly repo: CartRepository,
+    private readonly userRepo: UserRepository,
     private readonly logger: LoggerService,
   ) {}
 
-  async createCart(dto: CreateCartDTO): Promise<CartResponseWrapper> {
-    const user = await this.userRepository.findUserById(dto.userId);
-    if (!user) return USER_RESPONSES.USER_NOT_FOUND();
+  async create(dto: CreateCartDTO): Promise<CartResponseWrapper> {
+    try {
+      const creator = await this.userRepo.findUserById(dto.createdBy);
+      if (!creator) throw new NotFoundException('Creator user not found');
 
-    const product = await this.productRepository.findById(dto.productId);
-    if (!product) return PRODUCT_RESPONSES.PRODUCT_NOT_FOUND();
+      const user = await this.userRepo.findUserById(dto.userId);
+      if (!user) throw new NotFoundException('User not found');
 
-    const creator = await this.userRepository.findUserById(dto.createdBy);
-    if (!creator) return USER_RESPONSES.USER_NOT_FOUND();
+      const existingUser = await this.repo.findById(user.id);
+      if(existingUser){
+        this.logger.log("User's cart has already present");
+        return CART_RESPONSES.USER_HAS_ALREADY_PRESENT()
+      }
 
-    const cart = this.cartRepository.create({
-      user,
-      product,
-      createdBy: creator,
-    });
+      const cart = this.repo.create({
+        user: { id: user.id } as any,
+        productIds: dto.productIds,
+        createdBy: { id: creator.id } as any,
+      });
 
-    const saved = await this.cartRepository.save(cart);
+      const savedCart = await this.repo.save(cart);
 
-    const cartResponseDto = {
-      id: saved.id,
-      userId: saved.user?.id,
-      productId: saved.product?.id,
-      createdBy: saved.createdBy?.id,
-      updatedBy: saved.updatedBy?.id,
-      createdAt: saved.createdAt,
-      updatedAt: saved.updatedAt,
-      // add other properties as required by CartResponseDto
-    };
-
-    return CART_RESPONSES.CART_CREATED(cartResponseDto);
+      return CART_RESPONSES.CART_CREATED(savedCart);
+    } catch (error) {
+        this.logger.log(error)
+    }
   }
 
-  async updateCart(id: number, dto: UpdateCartDTO): Promise<CartResponseWrapper> {
-    const existing = await this.cartRepository.findById(id);
-    if (!existing) return CART_RESPONSES.CART_NOT_FOUND();
+  async update(id: number, dto: UpdateCartDTO): Promise<CartResponseWrapper> {
+    try {
+      const cart = await this.repo.findById(id);
+      if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
 
-    if (dto.productId) {
-      const product = await this.productRepository.findById(dto.productId);
-      if (!product) return PRODUCT_RESPONSES.PRODUCT_NOT_FOUND();
-      existing.product = product;
+      const updater = await this.userRepo.findUserById(dto.updatedBy);
+      if (!updater) throw new NotFoundException('Updater user not found');
+
+      if (dto.productIds) cart.productIds = dto.productIds;
+      cart.updatedBy = { id: updater.id } as any;
+
+      const updatedCart = await this.repo.save(cart);
+
+      return CART_RESPONSES.CART_UPDATED(updatedCart);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updatelist(id: number, dto: UpdateCartListDTO): Promise<CartResponseWrapper> {
+        try {
+          const cart = await this.repo.findByUserId(id);
+          if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
+
+          const updater = await this.userRepo.findUserById(dto.updatedBy);
+          if (!updater) throw new NotFoundException('Updater user not found');
+
+          const prdId = String(dto.productId)
+          const index = cart.productIds.findIndex(id => String(id) === String(dto.productId));
+
+          if (index > -1) {
+            cart.productIds.splice(index, 1);
+          } else {
+            cart.productIds.push(dto.productId);
+          }
+          cart.updatedBy = { id: updater.id } as any;
+          const updatedWishlist = await this.repo.save(cart);
+          return CART_RESPONSES.CART_UPDATED(updatedWishlist);
+        } catch (error) {
+          throw error;
+        }
     }
 
-    const updater = await this.userRepository.findUserById(dto.updatedBy);
-    if (!updater) return USER_RESPONSES.USER_NOT_FOUND();
-
-    existing.updatedBy = updater;
-
-  const updated = await this.cartRepository.save(existing);
-
-  const cartResponseDto = {
-    id: updated.id,
-    userId: updated.user?.id,
-    productId: updated.product?.id,
-    createdBy: updated.createdBy?.id,
-    updatedBy: updated.updatedBy?.id,
-    createdAt: updated.createdAt,
-    updatedAt: updated.updatedAt,
-    // add other properties as required by CartResponseDto
-  };
-
-  return CART_RESPONSES.CART_UPDATED(cartResponseDto);
-  }
-
   async getAllCarts(): Promise<CartsResponseWrapper> {
-    const carts = await this.cartRepository.getAll();
-    const cartResponseDtos = carts.map(cart => ({
-      id: cart.id,
-      userId: cart.user?.id,
-      productId: cart.product?.id,
-      createdBy: cart.createdBy?.id,
-      updatedBy: cart.updatedBy?.id,
-      createdAt: cart.createdAt,
-      updatedAt: cart.updatedAt,
-      // add other properties as required by CartResponseDto
-    }));
-    return CART_RESPONSES.CARTS_FETCHED(cartResponseDtos);
+    try {
+      const carts = await this.repo.getAllCarts();
+      if (!carts.length) return CART_RESPONSES.CARTS_NOT_FOUND();
+
+      return CART_RESPONSES.CARTS_FETCHED(carts);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  async getCartById(id: number): Promise<CartResponseWrapper> {
-    const cart = await this.cartRepository.findById(id);
+  async getCartByUserId(userId: number): Promise<CartResponseWrapper | null> {
+    const cart = await this.repo.findByUserId(userId);
     if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
-
-    const cartResponseDto = {
-      id: cart.id,
-      userId: cart.user?.id,
-      productId: cart.product?.id,
-      createdBy: cart.createdBy?.id,
-      updatedBy: cart.updatedBy?.id,
-      createdAt: cart.createdAt,
-      updatedAt: cart.updatedAt,
-      // add other properties as required by CartResponseDto
-    };
-
-    return CART_RESPONSES.CART_FETCHED(cartResponseDto);
+    return CART_RESPONSES.CARTS_FETCHED_BY_USER_ID(cart)
   }
 
-  async deleteCart(id: number): Promise<CartResponseWrapper> {
-    const cart = await this.cartRepository.findById(id);
-    if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
+  async delete(id: number): Promise<CartResponseWrapper> {
+    try {
+      const cart = await this.repo.findById(id);
+      if (!cart) return CART_RESPONSES.CART_NOT_FOUND();
 
-    await this.cartRepository.deleteById(id);
-    return CART_RESPONSES.CART_DELETED(id);
+      await this.repo.deleteById(id);
+
+      return CART_RESPONSES.CART_DELETED(id);
+    } catch (error) {
+      throw error;
+    }
   }
+
 }
