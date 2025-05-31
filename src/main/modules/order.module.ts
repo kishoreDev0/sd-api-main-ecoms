@@ -8,6 +8,7 @@ import { LoggerService } from '../service/logger.service';
 import { UserModule } from './user.module'; // assuming this exists
 import { AuthenticationModule } from './authentication.module';
 import { CartModule } from './cart.module';
+import { ProductModule } from './product.module';
 
 
 
@@ -15,6 +16,7 @@ import { CartModule } from './cart.module';
   imports: [TypeOrmModule.forFeature([Order]),
       forwardRef(() => UserModule),
       forwardRef(() => CartModule),
+      forwardRef(() => ProductModule),
       forwardRef(() => AuthenticationModule),
   ],
   controllers: [OrderController],

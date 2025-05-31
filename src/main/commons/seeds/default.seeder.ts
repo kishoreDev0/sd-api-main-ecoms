@@ -22,9 +22,9 @@ export const seedDefault = async (dataSource: DataSource): Promise<void> => {
   const existingUsers = await userRepository.find();
   if (existingUsers.length === 0) {
     const superUser = userRepository.create({
-      firstName: 'Ta-Track',
-      lastName: 'Super_User',
-      officialEmail: 'tatracksuperuser@gmail.com',
+      firstName: 'Kishore',
+      lastName: 'Kumaran',
+      officialEmail: 'kishoreplaysop@gmail.com',
       password: await bcrypt.hash('Admin@123', 10),
       role: superUserRole,
       isActive: true,
@@ -35,9 +35,9 @@ export const seedDefault = async (dataSource: DataSource): Promise<void> => {
     });
 
     const user = userRepository.create({
-      firstName: 'Ta-Track',
-      lastName: 'User',
-      officialEmail: 'tempmail@gmail.com',
+      firstName: 'Pirate',
+      lastName: 'pink',
+      officialEmail: 'kishorednmgroup@gmail.com',
       password: await bcrypt.hash('User@123', 10),
       role: userRole,
       isActive: true,
