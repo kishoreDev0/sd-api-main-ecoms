@@ -28,9 +28,9 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post()
-  create(@Body() dto: CreateCartDTO): Promise<CartResponseWrapper> {
+  async create(@Body() dto: CreateCartDTO): Promise<CartResponseWrapper> {
    try{
-     const result =  this.cartService.create(dto);
+     const result =  await this.cartService.create(dto);
      return result
    }
    catch(error){

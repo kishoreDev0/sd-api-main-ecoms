@@ -1,37 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsArray, ArrayNotEmpty, IsString, IsOptional, IsEnum, IsDecimal } from 'class-validator';
-import { OrderStatus } from 'src/main/entities/order.entity';
+import { IsNumber, IsArray, IsString} from 'class-validator';
+import { Product } from 'src/main/entities/product.entity';
 
 export class CreateOrderDTO {
-  @ApiProperty()
-  @IsNumber()
-  userId: number;
 
   @ApiProperty()
   @IsArray()
-  @ArrayNotEmpty()
-  productIds: number[];
+  productQuantity:ProductQuantityItem[];
+  
+  @ApiProperty()
+  @IsArray()
+  products:Product[];
 
   @ApiProperty()
   @IsNumber()
-  totalAmount: number;
-
-  @ApiProperty({ enum: OrderStatus, default: OrderStatus.PENDING })
-  @IsEnum(OrderStatus)
-  @IsOptional()
-  status?: OrderStatus;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  shippingAddress?: string;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  notes?: string;
+  createdBy:number
 
   @ApiProperty()
-  @IsNumber()
-  createdBy: number;
+  @IsString()
+  address:string
+
+  @ApiProperty()
+  @IsString()
+  notes:string
+}
+
+export class ProductQuantityItem {
+  product_id: number;
+  quantity: number;
 }

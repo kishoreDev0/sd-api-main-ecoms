@@ -9,41 +9,63 @@ import {
 } from '../dto/responses/order-response.dto';
 import { ORDER_RESPONSES } from '../commons/constants/response-constants/order.constant';
 import { LoggerService } from './logger.service';
+import { OrderStatus } from '../entities/order.entity';
+import { USER_RESPONSES } from '../commons/constants/response-constants/user.constant';
+import { CartRepository } from '../repository/cart.repository';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly repo: OrderRepository,
     private readonly userRepo: UserRepository,
+    private readonly cartRepo:CartRepository,
     private readonly logger: LoggerService,
   ) {}
 
   async create(dto: CreateOrderDTO): Promise<OrderResponseWrapper> {
-    try {
-      const creator = await this.userRepo.findUserById(dto.createdBy);
-      if (!creator) throw new NotFoundException('Creator user not found');
+  try {
+    const creator = await this.userRepo.findUserById(dto.createdBy);
+    if (!creator) return USER_RESPONSES.USERS_NOT_FOUND()
 
-      const user = await this.userRepo.findUserById(dto.userId);
-      if (!user) throw new NotFoundException('User not found');
+    // If needed, get user from one of the products or creator
+    const user = await this.userRepo.findUserById(dto.createdBy);
+    if (!user) USER_RESPONSES.USERS_NOT_FOUND()
 
-      const order = this.repo.create({
-        user: { id: user.id } as any,
-        productIds: dto.productIds,
-        totalAmount: dto.totalAmount,
-        status: dto.status,
-        shippingAddress: dto.shippingAddress,
-        notes: dto.notes,
-        createdBy: { id: creator.id } as any,
-      });
+    // Extract product IDs
+    const productIds = dto.productQuantity.map(pq => pq.product_id);
 
-      const savedOrder = await this.repo.save(order);
-
-      return ORDER_RESPONSES.ORDER_CREATED(savedOrder);
-    } catch (error) {
-      this.logger.log(error);
-      throw error;
+    // Calculate totalAmount using product prices
+    let totalAmount = 0;
+    for (const item of dto.productQuantity) {
+      const product = dto.products.find(p => p.id === item.product_id);
+      if (product) {
+        totalAmount += product.price * item.quantity;
+      }
     }
+
+    const order = this.repo.create({
+      user: { id: user.id } as any,
+      productIds,
+      status: OrderStatus.PENDING,
+      shippingAddress: dto.address,
+      totalAmount:totalAmount,
+      notes: dto.notes,
+      createdBy: { id: creator.id } as any,
+    });
+
+    const userCart = await this.cartRepo.findByUserId(order.user.id);
+    userCart.productIds = [];
+    await this.cartRepo.save(userCart)
+
+    const savedOrder = await this.repo.save(order);
+
+    return ORDER_RESPONSES.ORDER_CREATED(savedOrder);
+  } catch (error) {
+    this.logger.error(error);
+    throw error;
   }
+}
+
 
   async update(id: number, dto: UpdateOrderDTO): Promise<OrderResponseWrapper> {
     try {

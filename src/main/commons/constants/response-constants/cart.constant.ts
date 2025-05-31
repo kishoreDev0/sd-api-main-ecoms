@@ -6,7 +6,7 @@ import {
 } from 'src/main/dto/responses/cart-response.dto';
 import { GenericResponseDto } from 'src/main/dto/responses/generics/generic-response.dto';
 
-export const CART_RESPONSES = {
+export const CART_RESPONSES = { 
   CART_NOT_FOUND: (): CartResponseWrapper => ({
     success: false,
     statusCode: HttpStatus.NOT_FOUND,
