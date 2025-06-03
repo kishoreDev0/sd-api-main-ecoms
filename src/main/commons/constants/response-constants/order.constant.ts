@@ -20,6 +20,12 @@ export const ORDER_RESPONSES = {
     message: 'Orders not found',
     data: [],
   }),
+   SUBSCRIBE_SUCCESS: (): OrderResponseWrapper => ({
+    success: false,
+    statusCode: HttpStatus.OK,
+    message: 'Subscription successful',
+   
+  }),
 
   ORDER_ALREADY_EXISTS: (): GenericResponseDto<null> => ({
     success: false,

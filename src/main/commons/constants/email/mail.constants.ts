@@ -1,3 +1,5 @@
+import { subscribe } from "diagnostics_channel";
+
 export const mailTemplates = {
   auth: {
     registration: './registration',
@@ -6,7 +8,8 @@ export const mailTemplates = {
    
   },
   mailFunction:{
-     orderConfirm: './order-confirmation'
+     orderConfirm: './order-confirmation',
+     subscribe: './subscribe'
   }
 };
 
@@ -17,7 +20,8 @@ export const mailSubject = {
     newPassword: 'New Password',
   },
   mailFunction:{
-    orderConfirm: 'Your Order Has Been Confirmed – Thank You for Shopping with Us!'
+    orderConfirm: 'Your Order Has Been Confirmed – Thank You for Shopping with Us!',
+    subscribe:'Glad to have you, Deflux! Your shopping journey starts here.'
   }
 };
 

@@ -212,4 +212,25 @@ export class OrderService {
       throw error;
     }
   }
+
+  async subscribe(id:number,email:string){
+      try{
+         const existingUser = await this.userRepo.findUserById(id);
+          if(!existingUser) return USER_RESPONSES.USER_NOT_FOUND();
+          const context = {
+
+          }
+          await this.mailService.sendMail(
+            email,
+            mailSubject.mailFunction.subscribe,
+            mailTemplates.mailFunction.subscribe,
+            context
+          )
+          return ORDER_RESPONSES.SUBSCRIBE_SUCCESS();
+  
+      }catch(error){
+        this.logger.log(error)
+      }
+  }
+
 }

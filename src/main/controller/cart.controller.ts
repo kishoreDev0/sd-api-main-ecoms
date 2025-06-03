@@ -22,12 +22,12 @@ import {
 
 @ApiTags('Carts')
 @Controller('v1/carts')
-@UseGuards(AuthGuard)
-@ApiHeadersForAuth()
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   async create(@Body() dto: CreateCartDTO): Promise<CartResponseWrapper> {
    try{
      const result =  await this.cartService.create(dto);
@@ -39,6 +39,8 @@ export class CartController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()  
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCartDTO,
@@ -52,6 +54,8 @@ export class CartController {
   }
 
    @Patch('/list/:id')
+   @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
     async updateList(
       @Param('id', ParseIntPipe) id: number,
       @Body() dto: UpdateCartListDTO,
@@ -72,6 +76,8 @@ export class CartController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   async getByUserId(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<CartResponseWrapper> {
@@ -84,6 +90,8 @@ export class CartController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   delete(@Param('id', ParseIntPipe) id: number): Promise<CartResponseWrapper> {
     return this.cartService.delete(id);
   }
