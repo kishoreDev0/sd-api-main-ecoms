@@ -102,8 +102,8 @@ export const mailConfigAsync = {
         },
       },
       defaults: {
-        from: `"TaTrack (No Reply)" <${mailFrom}>`,
-        to: `"TaTrack (No Reply)" <${mailFrom}>`,
+        from: `"Deflux (No Reply)" <${mailFrom}>`,
+        to: `"Deflux (No Reply)" <${mailFrom}>`,
       },
       template: {
         dir: templateDir,

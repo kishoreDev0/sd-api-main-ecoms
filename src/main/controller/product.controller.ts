@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
@@ -16,16 +17,23 @@ import { UpdateProductDto } from '../dto/requests/product/update-product.dto';
 import { ProductResponseDto } from '../dto/responses/product-response.dto';
 import { PRODUCT_RESPONSES } from '../commons/constants/response-constants/product.constant';
 import { LoggerService } from '../service/logger.service';
+import { ApiHeadersForAuth } from '../commons/guards/auth-headers.decorator';
+import { AuthGuard } from '../commons/guards/auth.guard';
+import { Public } from '../commons/decorators/public.decorator';
 
 @ApiTags('products')
 @Controller('v1/products')
+// @UseGuards(AuthGuard)
+// @ApiHeadersForAuth()
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
     private readonly loggerService: LoggerService,
   ) {}
 
+
   @Post()
+  @Public()
   @ApiResponse({ status: 201, type: ProductResponseDto })
   async create(@Body() dto: CreateProductDto) {
     try {

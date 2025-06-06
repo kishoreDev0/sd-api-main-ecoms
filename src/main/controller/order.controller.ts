@@ -23,8 +23,8 @@ import {
 
 @ApiTags('Orders')
 @Controller('v1/orders')
-@UseGuards(AuthGuard)
-@ApiHeadersForAuth()
+// @UseGuards(AuthGuard)
+// @ApiHeadersForAuth()
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
@@ -40,6 +40,8 @@ export class OrderController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateOrderDTO,
@@ -53,6 +55,8 @@ export class OrderController {
   }
 
   @Patch(':id/status')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   async updateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateOrderStatusDTO,
@@ -107,6 +111,8 @@ export class OrderController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
   async delete(@Param('id', ParseIntPipe) id: number): Promise<OrderResponseWrapper> {
     try {
       return await this.orderService.delete(id);
@@ -114,5 +120,18 @@ export class OrderController {
       console.error(error);
       throw error;
     }
+  }
+
+  @Post('/subscribe/:id')
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
+  async sendSubscribe(@Param('id', ParseIntPipe) id: number,  @Body('email') email: string){
+      try{
+         const result = await this.orderService.subscribe(id,email)
+         return result ;
+      }
+      catch(error){
+         console.log(error)
+      }
   }
 }
