@@ -1,0 +1,28 @@
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
+@Entity('ta_static')
+export class Static {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  title: string;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column()
+  isActive: boolean;
+
+  @Column()
+  createdBy: number;
+
+  @Column({ nullable: true })
+  updatedBy?: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
