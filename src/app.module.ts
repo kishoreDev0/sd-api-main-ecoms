@@ -16,6 +16,7 @@ import { CategoryModule } from './main/modules/category.module';
 import { OrderModule } from './main/modules/order.module';
 import { ContactModule } from './main/modules/contact.module';
 import { StaticModule } from './main/modules/static.module';
+import { FaqModule } from './main/modules/faq.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { StaticModule } from './main/modules/static.module';
     CategoryModule,
     OrderModule,
     ContactModule,
-    StaticModule
+    StaticModule,
+    FaqModule
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

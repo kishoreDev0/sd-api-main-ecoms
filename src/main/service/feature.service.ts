@@ -41,7 +41,6 @@ export class FeatureService {
         
 
     Object.assign(feature, dto, { updatedBy: updater });
-
     const updatedFeature = await this.repo.save(feature);
 
     return FEATURE_RESPONSES.FEATURE_UPDATED(updatedFeature);

@@ -7,7 +7,7 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { StaticResponseDto } from '../dto/responses/static-response.dto';
 
 @ApiTags('static-pages')
-@Controller('v1/static-pages')
+@Controller('v1/statics')
 export class StaticController {
   constructor(private readonly staticService: StaticService) {}
 

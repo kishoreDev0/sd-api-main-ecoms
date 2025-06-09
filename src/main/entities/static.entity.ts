@@ -8,7 +8,7 @@ export class Static {
   @Column({ unique: true })
   title: string;
 
-  @Column({ nullable: true })
+@Column({ type: 'text', nullable: false })
   description?: string;
 
   @Column()
