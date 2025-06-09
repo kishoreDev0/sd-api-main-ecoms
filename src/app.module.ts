@@ -14,6 +14,9 @@ import { WishlistModule } from './main/modules/wishlist.module';
 import { FeatureModule } from './main/modules/feature.module';
 import { CategoryModule } from './main/modules/category.module';
 import { OrderModule } from './main/modules/order.module';
+import { ContactModule } from './main/modules/contact.module';
+import { StaticModule } from './main/modules/static.module';
+import { FaqModule } from './main/modules/faq.module';
 
 @Module({
   imports: [
@@ -28,7 +31,10 @@ import { OrderModule } from './main/modules/order.module';
     WishlistModule,
     FeatureModule,
     CategoryModule,
-    OrderModule
+    OrderModule,
+    ContactModule,
+    StaticModule,
+    FaqModule
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

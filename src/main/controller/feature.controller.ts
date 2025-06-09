@@ -11,15 +11,17 @@ import { FeaturesResponseWrapper } from '../dto/responses/feature.response.dto';
 
 @Controller('v1/features')
 @ApiTags('Features')
-@UseGuards(AuthGuard)
-@ApiHeadersForAuth()
+// @UseGuards(AuthGuard)
+// @ApiHeadersForAuth()
 export class FeatureController {
   constructor(private readonly service: FeatureService) {}
-
-    @Post()
-    create(@Body() createFeatureDto: CreateFeatureDTO) {
-    return this.service.create(createFeatureDto);
-    }
+  
+  @Post()
+  @UseGuards(AuthGuard)
+  @ApiHeadersForAuth()
+  create(@Body() createFeatureDto: CreateFeatureDTO) {
+  return this.service.create(createFeatureDto);
+  }
 
   @Patch(':id')
   async update(@Param('id') id: number, @Body() dto: UpdateFeatureDTO) {
@@ -31,15 +33,16 @@ export class FeatureController {
        console.log(error  )
     }
   }
-    @Get()
-    async findAll(): Promise<FeaturesResponseWrapper> {
-        return this.service.getAllFeatures();
-    }
+  @Get()
+  async findAll(): Promise<FeaturesResponseWrapper> {
+      return this.service.getAllFeatures();
+  }
 
   @Delete(':id')
   delete(@Param('id') id: number) {
     return this.service.delete(id);
   }
 
+  
 
 }
