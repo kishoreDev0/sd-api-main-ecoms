@@ -4,6 +4,11 @@ import { Role } from 'src/main/entities/role.entity';
 import { User } from 'src/main/entities/user.entity';
 
 export class InviteUserRequestDto {
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'First name is required' })
+  firstName: string;
+
   @ApiProperty()
   @IsNotEmpty({ message: 'email is required' })
   officialEmail: string;

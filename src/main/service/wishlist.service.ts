@@ -141,7 +141,7 @@ export class WishlistService {
   
     async getWishlistByUserId(userId: number): Promise<WishlistResponseWrapper | null> {
       const cart = await this.repo.findByUserId(Number(userId));
-      console.log(cart)
+
       if (!cart) return WISHLIST_RESPONSES.WISHLIST_NOT_FOUND();
       return WISHLIST_RESPONSES.WISHLISTS_FETCHED_BY_USER_ID(cart)
     }

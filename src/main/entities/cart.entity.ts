@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('ta_cart')
+@Entity('def_cart')
 export class Cart {
   @PrimaryGeneratedColumn()
   id: number;

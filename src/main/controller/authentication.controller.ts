@@ -51,7 +51,7 @@ export class AuthenticationController {
     private readonly googleService: GoogleService,
   ) {}
 
-  @Post('invite')
+  @Post('inviteUsers')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Invite a new user' })
   @ApiHeader({ name: 'user-id', required: true, description: 'User ID' })
@@ -87,6 +87,28 @@ export class AuthenticationController {
       );
     }
   }
+
+  @Post('inviteUser')
+  async inviteUserRev(
+    @Body() inviteUserDto: InviteUserRequestDto,
+    @Req() req: Request,
+  ): Promise<
+    | InviteUserResponseWrapper
+    | FailureResposneDto
+    | UserResponseWrapper
+    | object
+  > {
+    try {
+      return await this.inviteService.inviteUseRev(inviteUserDto);
+    } catch (error) {
+      this.logger.error('Failed to invite user', error.stack);
+      throw new HttpException(
+        'An error occurred while inviting user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

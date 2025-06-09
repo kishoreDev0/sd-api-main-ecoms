@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from './user.entity';
 import { Order } from './order.entity';
 
-@Entity('ta_contact')
+@Entity('def_contact')
 export class Contact {
   @PrimaryGeneratedColumn()
   id: number;

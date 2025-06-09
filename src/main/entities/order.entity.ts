@@ -9,7 +9,7 @@ export enum OrderStatus {
   CANCELLED = 'cancelled'
 }
 
-@Entity('ta_orders')
+@Entity('def_orders')
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;

@@ -11,7 +11,7 @@ import {
 import { User } from '../entities/user.entity';
 
 
-@Entity('ecom_faq')
+@Entity('def_faq')
 export class Faq {
   @PrimaryGeneratedColumn()
   id: number;

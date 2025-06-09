@@ -17,6 +17,8 @@ import { GoogleStrategy } from '../google-sign-in/google.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleService } from '../google-sign-in/google.service';
 import { GoogleModule } from '../google-sign-in/google.module';
+import { WishlistModule } from './wishlist.module';
+import { CartModule } from './cart.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { GoogleModule } from '../google-sign-in/google.module';
     forwardRef(() => RoleModule),
     PassportModule.register({ defaultStrategy: 'google' }),
     GoogleModule,
+    WishlistModule,
+    CartModule,
   ],
   controllers: [AuthenticationController],
   providers: [
