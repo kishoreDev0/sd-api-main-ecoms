@@ -10,7 +10,7 @@ import {
 import { User } from './user.entity';
 import { Category } from './category.entity'; 
 
-@Entity('ta_product')
+@Entity('def_product')
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('ta_category')
+@Entity('def_category')
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;

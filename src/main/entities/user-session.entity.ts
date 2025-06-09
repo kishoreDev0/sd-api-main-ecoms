@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('ta_user_sessions')
+@Entity('def_user_sessions')
 @Unique(['token'])
 export class UserSession {
   @PrimaryGeneratedColumn()

@@ -11,7 +11,7 @@ import {
 import { Product } from './product.entity';
 import { User } from './user.entity';
 
-@Entity('ta_feature')
+@Entity('def_feature')
 export class Feature {
   @PrimaryGeneratedColumn()
   id: number;

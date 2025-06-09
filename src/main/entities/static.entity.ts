@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('ta_static')
+@Entity('def_static')
 export class Static {
   @PrimaryGeneratedColumn()
   id: number;

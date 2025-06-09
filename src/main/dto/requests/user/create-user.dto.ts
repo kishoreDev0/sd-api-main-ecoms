@@ -46,3 +46,7 @@ export class CreateUserDTO {
   @IsNotEmpty({ message: 'created_by is required' })
   createdBy: User;
 }
+
+export class createUserRev{
+
+}

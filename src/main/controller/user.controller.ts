@@ -37,6 +37,13 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
+  @Post('create')
+  async createUserRev(
+    @Body() createUserDto: CreateUserDTO,
+  ): Promise<UserResponseWrapper> {
+    return this.userService.createUserRev(createUserDto);
+  }
+
   @Get('users')
   async getUsers(): Promise<UsersResponseWrapper> {
     return this.userService.getAllUsers();

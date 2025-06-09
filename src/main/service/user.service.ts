@@ -57,6 +57,39 @@ export class UserService {
     return USER_RESPONSES.USER_CREATED(savedUser);
   }
 
+   async createUserRev(createUserDto: CreateUserDTO): Promise<UserResponseWrapper> {
+    const role = await this.roleRepository.findByRoleId(
+      createUserDto.roleId.id,
+    );
+    if (!role) {
+      return ROLE_RESPONSES.ROLE_NOT_FOUND(createUserDto.roleId.id);
+    }
+
+    const createdByUser = await this.userRepository.findUserById(
+      createUserDto.createdBy.id,
+    );
+    if (!createdByUser) {
+      return USER_RESPONSES.USER_NOT_FOUND();
+    }
+
+    const existingUser = await this.userRepository.findByEmail(
+      createUserDto.officialEmail,
+    );
+    if (existingUser) {
+      this.logger.warn(
+        `User with name ${createUserDto.firstName} ${createUserDto.lastName} already exists`,
+      );
+      return USER_RESPONSES.USER_ALREADY_EXISTS(existingUser.id);
+    }
+
+    const user = new User();
+    Object.assign(user, createUserDto);
+    user.password = await bcrypt.hash(createUserDto.password, 10);
+    const savedUser = await this.userRepository.save(user);
+    this.logger.log(`User created with ID ${savedUser.id}`);
+    return USER_RESPONSES.USER_CREATED(savedUser);
+  }
+
   async updateUser(
     userId: number,
     updateUserDto: UpdateUserDTO,
